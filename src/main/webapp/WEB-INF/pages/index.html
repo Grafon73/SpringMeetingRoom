@@ -1,0 +1,118 @@
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Meeting Room</title>
+</head>
+<script th:inline="javascript" th:charset="utf-8">
+    function myf() {
+        let tbl = document.getElementById('table');
+        if (tbl != null) {
+            for (let i = 0; i < tbl.rows.length; i++) {
+                for (let j = 0; j < tbl.rows[i].cells.length; j++) {
+                    tbl.rows[i].cells[j].onclick = (function (i, j) {
+                        return function () {
+                            if(tbl.rows[i].cells[j].innerHTML===""){
+                                let q = tbl.rows[0].cells[j].innerHTML;
+                                q=q.substr(q.length-10)
+                                let nowDate = new Date().getTime();
+                                let eventDate = Date.parse(q+"T"+i+":00:00");
+                                let difference = eventDate-nowDate;
+                                if(difference > 1800000 && difference<86400000){
+                                    document.location.href = "http://localhost:8080/add?date="+q+"&hour="+i;
+                                }else{
+                                    alert("Reserve error: Minimum booking interval 30 minutes,\n" +
+                                        "maximum - 24 hours")
+                                }
+
+                            }else{
+                                alert("Reserve error: Room is busy at this time. Try another time, or delete current event")
+                            }
+                        };
+                    }(i, j));
+                }
+            }
+        }
+    }
+   function buttonClick(id) {
+       document.location.href = "http://localhost:8080/edit/"+id;
+   }
+
+    function isEmail(ab) {
+        let str = document.getElementById("email").value;
+        let a= ab;
+        let status = document.getElementById("status");
+        status.innerHTML = a;
+
+    }
+
+    function onDateChange(obj) {
+        document.location.href = "http://localhost:8080/?date="+obj.value;
+    }
+    function onLoad() {
+        let tbl = document.getElementById("table");
+        let days = [[${header}]];
+        let events = [[${events}]];
+        for (let z = 1; z < 8; z++) {
+            for (let k = 0; k < events.length; k++) {
+                if(days[z].length>10){
+            let myDay = days[z].substring(days[z].length-10);
+                let a = events[k].date;
+                let h= events[k].hour;
+                if(myDay==a) {
+                    if (tbl != null) {
+                        tbl.rows[h].cells[z].innerText=events[k].name + ": \n"+events[k].message;
+                        let button = document.createElement("input");
+                        button.type = "button";
+                        button.value="edit";
+                        button.addEventListener("click",() =>buttonClick(events[k].id));
+                        tbl.rows[h].cells[z].insertAdjacentElement("beforeend", button);
+
+                    }
+
+            }
+        }
+     }
+    }
+}
+
+
+</script>
+
+
+    <body th:onload="onLoad()">
+<h1>Meeting Room</h1>
+<table id='table' border="1" th:onclick="myf()">
+    <tr>
+
+        <td th:text="${header[0]}">...</td>
+        <td th:text="${header[1]}">...</td>
+        <td th:text="${header[2]}">...</td>
+        <td th:text="${header[3]}">...</td>
+        <td th:text="${header[4]}">...</td>
+        <td th:text="${header[5]}">...</td>
+        <td th:text="${header[6]}">...</td>
+        <td th:text="${header[7]}">...</td>
+    </tr>
+    <th:block th:each="film : ${daydata}">
+<tr>
+        <td th:text="${film.getKey()}">...</td>
+        <td th:text="${film.getValue().get(0)}">...</td>
+        <td th:text="${film.getValue().get(1)}">...</td>
+        <td th:text="${film.getValue().get(2)}">...</td>
+        <td th:text="${film.getValue().get(3)}">...</td>
+        <td th:text="${film.getValue().get(4)}">...</td>
+        <td th:text="${film.getValue().get(5)}">...</td>
+        <td th:text="${film.getValue().get(6)}">...</td>
+
+</tr>
+    </th:block>
+</table>
+<h2>Dates</h2>
+
+<div class="input-inner">
+        <form>
+            <input th:onchange="onDateChange(this)" type="date"  class="firstDate" name="firstDate">
+        </form>
+</div>
+</body>
+</html>

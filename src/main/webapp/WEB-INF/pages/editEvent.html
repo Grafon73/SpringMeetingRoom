@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+<form th:action="@{/edit}" th:object="${event}" method="post">
+    <p><input type="hidden" th:field="*{id}"></p>
+    <p><label>Event Date</label></p>
+    <p><input type="text" th:field="*{date}"></p>
+    <p><label>Event Hour</label></p>
+    <p><input type="text" th:field="*{hour}"></p>
+    <p><label>Message</label></p>
+    <p><input type="text" th:field="*{message}"></p>
+    <p><label>Creator Name</label></p>
+    <p><input type="text" th:field="*{name}"></p>
+    <p><input type="submit" value="Edit event">
+    <a th:href="@{/delete/{id}(id=${event.id})}">Delete event</a></p>
+</form>
+</body>
+</html>

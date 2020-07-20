@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Add</title>
+</head>
+<body>
+<!--/*@thymesVar id="event" type="com.test.application.model.Event"*/-->
+<form th:action="@{/add}" th:object="${event}" method="post" accept-charset="utf-8">
+    <p><label for="date">Event Date</label></p>
+    <p><input type="text" name="date" th:value="${date}" id="date"></p>
+    <p><label for="hour">Event Hour</label></p>
+    <p><input type="text" th:value="${hour}" name="hour" id="hour" ></p>
+    <p><label for="message">Message</label></p>
+    <p><input type="text" name="message" id="message"></p>
+    <p><label for="name">Creator Name</label></p>
+    <p><input type="text" name="name" id="name"></p>
+    <p><input type="submit" value="Add new Event"></p>
+</form>
+</body>
+</html>
